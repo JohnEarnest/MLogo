@@ -1,0 +1,14 @@
+# Variables
+#
+# test the creation of local and global variables
+# as well as reading from them.
+
+local 'foobar 43
+print :foobar
+
+local 'baz [A C D C]
+print :baz
+print thing 'baz
+
+make 'quux 967
+print :quux

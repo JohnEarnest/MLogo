@@ -1,0 +1,5 @@
+# negative syntax test 4: invalid word name in to
+
+to 123 :x :y
+	print 'nope
+end

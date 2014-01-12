@@ -1,0 +1,10 @@
+# negative runtime test 2: undefined call
+
+to foo
+	quux
+end
+
+to bar
+	foo
+end
+bar

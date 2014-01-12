@@ -1,0 +1,6 @@
+# negative runtime test 4: stack overflow
+
+to foo
+	output sum 1 foo
+end
+foo

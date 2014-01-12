@@ -1,0 +1,28 @@
+# Misc
+#
+# test miscellaneous functionality
+
+words
+
+local 'QUUX [1 2 3]
+
+words
+
+erase 'QUUX
+
+words
+
+# I had an amusing bug in which procedure bodies
+# containing only a call to one primitive were
+# confused with the primitive body itself by
+# the TCO mechanism, leading to infinite loops:
+
+to foo
+	trace
+end
+
+to bar
+	trace
+	run [foo]
+end
+bar

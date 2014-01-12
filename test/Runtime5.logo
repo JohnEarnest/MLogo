@@ -1,0 +1,7 @@
+# negative runtime test 5: not enough args
+
+to quux
+	print sum 3
+end
+
+quux

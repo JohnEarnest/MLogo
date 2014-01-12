@@ -1,0 +1,32 @@
+# Tail
+#
+# verify that tail-calls work and are
+# optimized correctly.
+
+# short-cut tail-call which should fit on the stack:
+to small :x
+	if equal? :x 50 [ print 'complete stop ]
+	small sum :x 1
+end
+small 0
+
+# returning tail-call which should fit on the stack:
+to enough :x
+	if equal? :x 50 [ output 'complete ]
+	output enough sum :x 1
+end
+print enough 0
+
+# short-cut tail-call which will exceed the callstack:
+to big :x
+	if equal? :x 2000 [ print 'complete! stop ]
+	big sum :x 1
+end
+big 0
+
+# returning tail-call which will exceed the callstack:
+to notenough :x
+	if equal? :x 2000 [ output 'complete! ]
+	output notenough sum :x 1
+end
+print notenough 0

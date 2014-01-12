@@ -1,0 +1,3 @@
+# negative runtime test 1: invalid operand
+
+print sum 1 'foo

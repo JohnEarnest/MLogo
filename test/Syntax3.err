@@ -1,0 +1,3 @@
+4: syntax error: 'to' without 'end'!
+		print 'nope
+		           ^

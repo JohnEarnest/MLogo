@@ -1,0 +1,64 @@
+# Procedures
+#
+# test procedure definitions and invocation
+
+# can we define and call a procedure?
+to foo
+	print 'A
+end
+foo
+
+# do argument bindings work?
+to bar :quux
+	print :quux
+end
+bar 969
+
+# do arguments come in the right order?
+to two :a :b
+	print :a
+	print :b
+end
+two 12 34
+
+# can we define a procedure which stops early?
+to early
+	print 'before
+	stop
+	print 'never
+end
+early
+
+# can we define a procedure which returns a result?
+to calc
+	output 3
+end
+print sum calc 4
+
+# can we chain procedure calls?
+to multicalc
+	output sum 10 calc
+end
+print sum 2 multicalc
+
+# can we stop a procedure within a run context?
+to runstop
+	print 'a
+	run [ print 'b stop print 'nope ]
+	print 'shouldnot
+end
+runstop
+
+# chain stops
+to runstopagain
+	print 'always
+	run [ run [ stop ] ]
+	print 'nope
+end
+runstopagain
+
+# same with output
+to runout :v
+	run [ run [ output sum :v 66]]
+end
+print runout 33

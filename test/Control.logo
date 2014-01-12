@@ -1,0 +1,40 @@
+# Control
+#
+# test primitive control structures
+# and their side-effects on scopes.
+
+# simple execution
+print 'Before
+run [
+	print 'Hello,
+	print 'World!
+]
+print 'After
+
+# simple conditionals
+if     'true  [ print 'tyep  ]
+unless 'true  [ print 'tnope ]
+if     'false [ print 'fyep  ]
+unless 'false [ print 'fnope ]
+
+# simple repeat
+repeat 4 [ print 999 print 666 ]
+
+# nested repeat
+repeat 3 [
+	print 'a
+	repeat 2 [ print 'b ]
+]
+
+# make sure 'run' pushes a scope:
+local 'x 23
+run [
+	local 'x 64
+	print :x
+]
+print :x
+
+# make sure 'if and 'unless push scopes:
+if     'true  [ local 'x 93 print :x ]
+unless 'false [ local 'x 39 print :x ]
+print :x

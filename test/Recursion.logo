@@ -1,0 +1,24 @@
+# Recursion
+#
+# some additional tests of complex recursive methods
+
+# multiple recursion
+to fib :n
+	if less? :n 2 [ output 1 ]
+	output sum
+		fib difference :n 1
+		fib difference :n 2
+end
+print fib 0
+print fib 1
+print fib 2
+print fib 3
+print fib 4
+print fib 5
+
+# a non-tail recursive sum
+to sumrec :a :b
+	if equal? :a 0 [ output :b ]
+	output sum 1 sumrec difference :a 1 :b
+end
+print sumrec 3 500

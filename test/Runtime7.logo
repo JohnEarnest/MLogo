@@ -1,0 +1,10 @@
+# negative runtime test 7: unused return value
+
+to bar
+	45
+end
+
+to foo
+	bar
+end
+foo

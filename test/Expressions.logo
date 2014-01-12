@@ -1,0 +1,40 @@
+# Expressions
+#
+# test the primitive arithmetic, comparison
+# and type predicate operators.
+
+print sum         1 2
+print difference  3 5
+print product     9 2
+print quotient   10 3
+print remainder  10 3
+
+print sum difference 2 9 difference 7 2
+
+print less? 1 2
+print less? 2 1
+print less? 5 5
+
+print greater? 1 2
+print greater? 2 1
+print greater? 5 5
+
+print equal?  1 2
+print equal?  5 5
+print equal? 'A first [:A]
+print equal? [1 2 3] [1 2 3]
+print equal? [1 2 3] [3 4 1]
+
+print asname  'A
+print asvalue 'A
+print ascall  'A
+
+print word? 'X
+print list? 'X
+print num?  'X
+print word? []
+print list? []
+print num?  []
+print word? 0
+print list? 0
+print num?  0

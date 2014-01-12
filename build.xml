@@ -1,0 +1,56 @@
+<project name="MLogo" default="mlogo">
+	<target name="clean">
+		<delete dir="build"/>
+		<delete dir="dist"/>
+		<delete dir="doc"/>
+	</target>
+
+	<target name="compilelib" depends="clean">
+		<mkdir dir="build"/>
+		<javac
+			source="1.5"
+			target="1.5"
+			srcdir="src/com/bme/logo"
+			destdir="build"
+			debug="on"
+			debuglevel="lines,vars,source"
+			includeantruntime="false"
+			deprecation="on"
+		>
+			<compilerarg value="-Xlint"/>
+			<compilerarg value="-Xbootclasspath:/res/1.5/rt.jar"/>
+		</javac>
+		<mkdir dir="dist"/>
+		<jar destfile="dist/Logo.jar" basedir="build" />
+	</target>
+
+	<target name="mlogo" depends="compilelib">
+		<javac
+			source="1.5"
+			target="1.5"
+			srcdir="src/com/bme/mlogo"
+			destdir="build"
+			debug="on"
+			debuglevel="lines,vars,source"
+			includeantruntime="false"
+			deprecation="on"
+		>
+			<compilerarg value="-Xlint"/>
+			<compilerarg value="-Xbootclasspath:/res/1.5/rt.jar"/>
+		</javac>
+		<mkdir dir="dist"/>
+		<jar destfile="dist/MLogo.jar" basedir="build">
+			<manifest>
+				<attribute name="Main-Class" value="com.bme.mlogo.MLogo"/>
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="doc">
+		<javadoc
+			destdir="docs"
+		>
+			<fileset dir="src/com/bme/logo"/>
+		</javadoc>
+	</target>
+</project>

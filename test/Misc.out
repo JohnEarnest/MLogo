@@ -1,0 +1,13 @@
+args ascall asname asvalue bind butfirst butlast difference equal? erase first flatten fput greater? if item join last less? list? local lput make member num? output print println product quotient random readlist remainder repeat run size stop sum thing trace unless version word? words 
+
+'QUUX args ascall asname asvalue bind butfirst butlast difference equal? erase first flatten fput greater? if item join last less? list? local lput make member num? output print println product quotient random readlist remainder repeat run size stop sum thing trace unless version word? words 
+
+args ascall asname asvalue bind butfirst butlast difference equal? erase first flatten fput greater? if item join last less? list? local lput make member num? output print println product quotient random readlist remainder repeat run size stop sum thing trace unless version word? words 
+
+trace: 
+	'bar
+
+trace: 
+	'foo
+	'bar
+

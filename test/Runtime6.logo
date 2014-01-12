@@ -1,0 +1,6 @@
+# negative runtime test 6: undefined value
+
+to foo
+	print :unknown
+end
+foo

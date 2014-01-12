@@ -1,0 +1,4 @@
+# negative syntax test 3: to without end
+
+to foobar
+	print 'nope

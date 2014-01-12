@@ -1,0 +1,35 @@
+# Lists
+#
+# test primitive list operations
+
+print size  []
+print size  [A B C]
+
+print first    []
+print first    [A B C]
+print last     []
+print last     [A B C]
+print butfirst []
+print butfirst [A B C]
+print butlast  []
+print butlast  [A B C]
+
+print flatten  []
+print flatten  [A [B [C []]]]
+print flatten  [[A B][C D] E]
+
+print item 0 [A B C]
+print item 2 [A B C]
+print item 5 [A B C]
+
+print fput 'Z []
+print fput 'Z [A B]
+print lput 'Z []
+print lput 'Z [A B]
+
+print join [A B][C]
+print join [][A B C]
+print join [A B C][]
+
+print member 'food [dog food in cans]
+print member 'pork [acceptable kosher foods]

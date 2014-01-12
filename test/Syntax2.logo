@@ -1,0 +1,3 @@
+# negative syntax test 2: ( without )
+
+print (2 + 4
