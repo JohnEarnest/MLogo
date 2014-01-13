@@ -13,51 +13,67 @@ public class MLogo {
 
 		boolean printHelp   = args.size() == 0;
 		boolean interactive = false;
+		boolean turtles     = false;
 
 		for(int z = args.size() - 1; z >= 0; z--) {
-			if ("-h".equals(args.get(z))) { printHelp   = true; args.remove(z); }
-			if ("-i".equals(args.get(z))) { interactive = true; args.remove(z); }
+			if ("-h".equals(args.get(z))) { printHelp   = true; args.remove(z); z--; }
+			if ("-i".equals(args.get(z))) { interactive = true; args.remove(z); z--; }
+			if ("-t".equals(args.get(z))) { turtles     = true; args.remove(z); z--; }
 		}
 
 		if (printHelp) {
 			System.out.println(version);
-			System.out.println("usage: MLogo [-hi] file ...");
+			System.out.println("usage: MLogo [-hit] file ...");
 			System.out.println();
 			System.out.println(" h : print this help message");
 			System.out.println(" i : provide an interactive REPL session");
+			System.out.println(" t : enable turtle graphics during batch mode");
 			System.out.println();
 		}
 
 		Environment e = kernel();
 		primitiveIO(e);
-		
-		for(String fileName : args) { runFile(e, fileName); }
-		
-		if (interactive) {
-			System.out.println(version);
-			System.out.println("type 'exit' to quit.");
-			System.out.println();
-			Scanner in = new Scanner(System.in);
+
+		// the repl always loads turtle graphics primitives,
+		// but they're strictly opt-in for batch mode.
+		if (turtles) {
 			TurtleGraphics t = new TurtleGraphics(e);
-			while(true) {
-				System.out.print(">");
-				String line = in.nextLine();
-				if ("exit".equals(line)) { break; }
-				while(!Parser.complete(line)) {
-					System.out.print(">>");
-					line += "\n" + in.nextLine();
-				}
-				runString(e, line, t);
-			}
-			System.exit(0);
+			for(String fileName : args) { runFile(e, fileName, t); }
+			if (interactive) { repl(e, t); }
+			else { System.exit(0); }
 		}
+		else {
+			for(String fileName : args) { runFile(e, fileName, null); }
+			if (interactive) {
+				TurtleGraphics t = new TurtleGraphics(e);
+				repl(e, t);
+			}
+		}
+	}
+
+	private static void repl(Environment env, TurtleGraphics t) {
+		System.out.println(version);
+		System.out.println("type 'exit' to quit.");
+		System.out.println();
+		Scanner in = new Scanner(System.in);
+
+		while(true) {
+			System.out.print(">");
+			String line = in.nextLine();
+			if ("exit".equals(line)) { break; }
+			while(!Parser.complete(line)) {
+				System.out.print(">>");
+				line += "\n" + in.nextLine();
+			}
+			runString(env, line, t);
+		}
+		System.exit(0);
 	}
 
 	private static void runString(Environment env, String sourceText, TurtleGraphics t) {
 		try {
 			LList code = Parser.parse(sourceText);
 			Interpreter.init(code, env);
-
 			while(true) {
 				// execute until the interpreter is paused
 				if (!Interpreter.runUntil(env)) { return; }
@@ -88,10 +104,24 @@ public class MLogo {
 		}
 	}
 
-	private static void runFile(Environment env, String filename) {
+	private static void runFile(Environment env, String filename, TurtleGraphics t) {
 		try {
 			LList code = Parser.parse(loadFile(filename));
-			Interpreter.run(code, env);
+			if (t == null) {
+				Interpreter.run(code, env);
+				return;
+			}
+			Interpreter.init(code, env);
+			while(true) {
+				// execute until the interpreter is paused
+				if (!Interpreter.runUntil(env)) { return; }
+				
+				// update the display until animation is complete
+				while(!t.update()) {
+					try { Thread.sleep(1000 / 30); }
+					catch(InterruptedException e) {}
+				}
+			}
 		}
 		catch(SyntaxError e) {
 			System.out.format("%d: syntax error: %s%n", e.lineNumber, e.getMessage());

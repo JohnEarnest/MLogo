@@ -137,7 +137,7 @@ public class TurtleGraphics {
 	public boolean update() {
 		if (turtle.goalDegrees != 0) {
 			int rotated = (int)(Math.signum(turtle.goalDegrees) *
-				Math.min(5, Math.abs(turtle.goalDegrees)));
+				Math.min(30, Math.abs(turtle.goalDegrees)));
 			turtle.goalDegrees -= rotated;
 			turtle.degrees += rotated;
 			turtle.window.repaint();
