@@ -39,13 +39,13 @@ public class Primitives {
 		}, a, b);
 		e.bind(new LWord(LWord.Type.Prim, "quotient") {
 			public void eval(Environment e) {
-				e.output(new LNumber(num(e, a) / num(e, b)));
+				e.output(new LNumber(num(e, a) / nonzero(e, b)));
 			}
 		}, a, b);
 		e.bind(new LWord(LWord.Type.Prim, "remainder") {
 			public void eval(Environment e) {
 				int x = num(e, a);
-				int y = num(e, b);
+				int y = nonzero(e, b);
 				x %= y;
 				e.output(new LNumber(x < 0 ? x+y : x));
 			}
@@ -308,6 +308,12 @@ public class Primitives {
 		LAtom o = e.thing(key);
 		if (o instanceof LNumber) { return ((LNumber)o).value; }
 		throw new RuntimeError(e, "'%s' is not a number!", o);
+	}
+
+	private static int nonzero(Environment e, LWord key) {
+		int ret = num(e, key);
+		if (ret == 0) { throw new RuntimeError(e, "I cannot divide by zero."); }
+		return ret;
 	}
 
 	/**
