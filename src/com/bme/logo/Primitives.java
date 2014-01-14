@@ -50,6 +50,11 @@ public class Primitives {
 				e.output(new LNumber(x < 0 ? x+y : x));
 			}
 		}, a, b);
+		e.bind(new LWord(LWord.Type.Prim, "negate") {
+			public void eval(Environment e) {
+				e.output(new LNumber(num(e, a) * -1));
+			}
+		}, a);
 		e.bind(new LWord(LWord.Type.Prim, "less?") {
 			public void eval(Environment e) {
 				e.output(toBool(num(e, a) < num(e, b)));

@@ -16,9 +16,9 @@ public class MLogo {
 		boolean turtles     = false;
 
 		for(int z = args.size() - 1; z >= 0; z--) {
-			if ("-h".equals(args.get(z))) { printHelp   = true; args.remove(z); z--; }
-			if ("-i".equals(args.get(z))) { interactive = true; args.remove(z); z--; }
-			if ("-t".equals(args.get(z))) { turtles     = true; args.remove(z); z--; }
+			if ("-h".equals(args.get(z))) { printHelp   = true; args.remove(z--); continue; }
+			if ("-i".equals(args.get(z))) { interactive = true; args.remove(z--); continue; }
+			if ("-t".equals(args.get(z))) { turtles     = true; args.remove(z--); continue; }
 		}
 
 		if (printHelp) {
