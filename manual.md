@@ -12,16 +12,16 @@ Numbers are the simplest of the Logo datatypes. They are represented as 32-bit s
 
 Lists are recursively composed of any (potentially mixed) Atomic types. A List literal is encosed within square brackets. (`[]`) Lists represent both code and data, and the logo program itself is an (implied) List of Words and other literals. As described below, a List which represents code may have an argument list associated with them- the `bind` primitive is used for attaching an argument list to an ordinary List, and the `args` primitive is used for retrieving the argument list, if any, from such a list. Here are a few examples of lists:
 
-		[]
-		[1 2 3]
-		[A [B C][D [E]] F]
+	[]
+	[1 2 3]
+	[A [B C][D [E]] F]
 
 Words come in three forms. If a Word is prefixed with a single quote (`'`), it is a Name and is simply an item which can be passed as an argument to procedures. If a Word is prefixed with a colon (`:`), it is a Value and encountering it in the program will look up the value associated with the word. If a word has no prefix, encountering it in the program will invoke a procedure of that name and consume arguments as necessary. Apart from prefixes and these three forms, Words can contain any upper or lower case alphabetic characters or any of the symbols `.,!?`. Here are a few examples of Words:
 
-		foobar
-		MASHED.TATERS
-		'mimsy
-		:x
+	foobar
+	MASHED.TATERS
+	'mimsy
+	:x
 
 (Notes: Many other Logo implementations use a `"` prefix instead of a `'` for name literals. The single quote is used here both to be more consistent with the syntax of Lisp and Forth with respect to "quoting" a name, and also to free the double quote character for use as a string delimiter in the future.)
 
@@ -30,28 +30,28 @@ Control Flow
 
 Logo follows a simple, uniform evaluation rule. A program is a List of Calls and other literal values. The Logo interpreter steps through elements of these lists one at a time, evaluating Calls. When a Call invokes a procedure which consumes one or more arguments, they are taken from the elements to the right of said Call, which may in turn result in evaluating further Calls. This has the effect of behaving like prefix-notation (as in Lisp) and many expressions read similarly to how they would in English. Here is an example of an expression:
 
-		print sum product 2 9 difference 2 1
+	print sum product 2 9 difference 2 1
 
 Parentheses can be used (optionally) to add clarity to expressions. The following is equivalent to the previous example:
 
-		print (sum (product 2 9) (difference 2 1))
+	print (sum (product 2 9) (difference 2 1))
 
 A few primitives modify the operation of the interpreter as described above. The primitive `run` takes as its argunment a List, which it will evaluate. The primitives `if` and `unless` each consume a boolean value followed by a List, and evaluate their list if said boolean is true or false, respectively. For the purposes of these words, the empty List `[]`, the Number zero or the Word `'false` are considered false and any other value is considered true. The primitives `stop` and `output` halt the surrounding procedure and, in the case of `output`, return a result. The `repeat` primitive consumes a Number followed by a List and evaluates the List that many times.
 
 When an indeterminate or infinite number of iterations are desired for a loop, a procedure may invoke itself recursively. Logo will perform tail-call optimization (TCO) on direct tail-recursive calls which return a result or are the final statement in a procedure. Consider two ways of writing a simple counting loop:
 
-		to one :x
-			print x
-			if equal? :x 1 [stop]
-			one difference :x 1
-		end
+	to one :x
+		print x
+		if equal? :x 1 [stop]
+		one difference :x 1
+	end
 
-		to two :x
-			repeat :x [
-				print :x
-				make 'x difference :x 1
-			]
-		end
+	to two :x
+		repeat :x [
+			print :x
+			make 'x difference :x 1
+		]
+	end
 
 Scoping
 -------
@@ -67,18 +67,18 @@ Procedures are defined by using `to` syntax. The keyword `to` is followed by a p
 
 To-blocks are syntactic sugar for a combination of `local` and `bind`. The following definitions are semantically identical:
 
-		to any :list
-			output item random size :list :list
-		end
+	to any :list
+		output item random size :list :list
+	end
 
-		local 'any bind ['list][output item random size :list :list]
+	local 'any bind ['list][output item random size :list :list]
 
 The `to` form is simply syntactic sugar which makes programs slightly more convenient and readable.
 
 Logo allows a small set of arithmetic operators (`+-*/%<>=`) to be used in infix expressions. These are parsed according to normal arithmetic precedence rules. Infix expressions should always be separated from prefix expressions with parentheses to avoid ambiguity. The following two expressions are equivalent:
 
-		print sum 1 product 3 5
-		print (1 + 3 * 5)
+	print sum 1 product 3 5
+	print (1 + 3 * 5)
 
 Finally, the hash character `#` may be used anywhere as a line-comment.
 
@@ -110,8 +110,8 @@ Logo also has a number of primitives for manipulating Lists. All operations retu
 - `fput (atom, list -> list)`: return the list with an atom added to the front.
 - `lput (atom, list -> list)`: return the list with an atom added to the end.
 - `join (list, list -> list)`: concatenate together two lists in sequence.
-- `flatten (list -> list)`: recursively combine the elmements of all List inside a List into a single List. For example, flattening the list [1 2[[3]4][[]5]] would produce [1 2 3 4 5].
-- `member (atom, list -> list)`: if this list contains a given element, return the sublist starting at that element and containing every following item. Otherwise return the empty list. For example, checking for 'food in [dog food in cans] would return [food in cans] while checking for 'pork in [acceptable kosher foods] would return [].
+- `flatten (list -> list)`: recursively combine the elmements of all List inside a List into a single List. For example, flattening the list `[1 2[[3]4][[]5]]` would produce `[1 2 3 4 5]`.
+- `member (atom, list -> list)`: if this list contains a given element, return the sublist starting at that element and containing every following item. Otherwise return the empty list. For example, checking for `'food` in `[dog food in cans]` would return `[food in cans]` while checking for `'pork` in `[acceptable kosher foods]` would return `[]`.
 
 Type Primitives
 ---------------
