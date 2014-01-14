@@ -5,7 +5,7 @@ MLogo is an implementation of the Logo programming language which can be used as
 
 ![Turtle graphics demonstration](http://i.imgur.com/VyqKHEX.gif)
 
-This repository includes both the Logo engine and an example application using it which provides an interactive Logo shell which adds console IO and Turtle Graphics. A suite of test programs which run against this shell program is also provided. The public interfaces of the Logo have JavaDoc documentation. A manual for the language itself can be found ![Here](https://github.com/JohnEarnest/MLogo/blob/master/manual.md).
+This repository includes both the Logo engine and an example application using it which provides an interactive Logo shell which adds console IO and Turtle Graphics. A suite of test programs which run against this shell program is also provided. The public interfaces of the Logo have JavaDoc documentation. A manual for the language itself can be found [Here](https://github.com/JohnEarnest/MLogo/blob/master/manual.md).
 
 Compiling and Running
 =====================
