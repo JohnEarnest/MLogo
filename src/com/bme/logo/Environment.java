@@ -211,6 +211,6 @@ class Func {
 
 	Func(Environment e, LList code) {
 		this.code = code;
-		this.args = code.arguments;
+		this.args = code.arguments == null ? new LList() : code.arguments;
 	}
 }

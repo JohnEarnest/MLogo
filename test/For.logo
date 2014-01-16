@@ -1,0 +1,27 @@
+# For
+#
+# synthetic control structures
+
+to for :var :max :body
+  local :var 0
+  repeat :max [ body make :var sum thing :var 1 ]
+end
+
+for 'x 5 [ print :x ]
+
+
+# this one would come out a lot cleaner
+# if we had support for implicit 'output'
+# at the end of a block:
+
+to while :cond :body
+	unless cond [stop]
+	body
+	while :cond :body
+end
+
+local 'z 0
+while [ output less? :z 3 ] [
+	print :z
+	make 'z sum :z 1
+]
