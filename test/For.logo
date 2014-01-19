@@ -21,7 +21,7 @@ to while :cond :body
 end
 
 local 'z 0
-while [ output less? :z 3 ] [
+while [ less? :z 3 ] [
 	print :z
 	make 'z sum :z 1
 ]

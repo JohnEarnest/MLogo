@@ -26,3 +26,34 @@ to bar
 	run [foo]
 end
 bar
+
+
+# a procedure which makes use of 'implicit output':
+
+to implicit :x
+	sum 45 :x
+end
+
+print implicit 5
+
+# does implicit output also work if you just have a bare literal?
+
+to bareimplicit
+	999
+end
+
+print bareimplicit
+
+# does implict output work if you chain procedures?
+
+to outer
+	print implicit 666
+end
+outer
+
+# does implicit output work when 'running' a passed in literal?
+
+to useimplicit :func
+	print sum 9 func
+end
+useimplicit [ print 'abracazebra product 2 9]

@@ -32,9 +32,23 @@ public class Environment {
 		scopes.push(new Scope(code, procedure));
 	}
 
+	private boolean implicitOutput(LAtom a) {
+		// we must be at the end of the current code list:
+		if (scopes.peek().index < scopes.peek().code.size()-1) { return false; }
+		// there must be some expression in a lower scope which wants a result:
+		if (scopes.get(scopes.size()-2).trace.size() < 1) { return false; }
+		return true;
+	}
+
 	void value(LAtom a) {
 		if (scopes.peek().trace.size() < 1) {
-			throw new RuntimeError(this, "I don't know what to do with '%s'!", a);
+			if (!implicitOutput(a)) {
+				throw new RuntimeError(this, "I don't know what to do with '%s'!", a);
+			}
+			else {
+				scopes.get(scopes.size() - 2).trace.peek().vals.add(a);
+				return;
+			}
 		}
 		scopes.peek().trace.peek().vals.add(a);
 	}
