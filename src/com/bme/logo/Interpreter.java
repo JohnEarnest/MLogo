@@ -106,7 +106,9 @@ public class Interpreter {
 	private static void newScope(Environment e, LList code) {
 		Scope outer = null;
 		for(int z = e.scopes.size()-1; z >= 1; z--) {
-			if (e.scopes.get(z).procedure) { outer = e.scopes.get(z); break; }
+			if (e.scopes.get(z).procedure && !(Primitives.prim(e.scopes.get(z).code))) {
+				outer = e.scopes.get(z); break;
+			}
 		}
 		if (canTail(outer, e, code)) {
 			// smash the call stack down to the tail procedure
@@ -124,8 +126,17 @@ public class Interpreter {
 	private static boolean canTail(Scope s, Environment e, LList target) {
 		if (s == null)               { return false; } // we must be in a procedure.
 		if (!s.code.equals(target))  { return false; } // our procedure must match our target.
-		if (s.index < s.code.size()) { return false; } // our procedure must be fully evaluated.
-		
+
+		// if the procedure has not been fully evaluated,
+		// the next operation must be a call to 'stop':
+		if (s.index < s.code.size()) {
+			LAtom next = e.scopes.peek().code.item(e.scopes.peek().index);
+			if (!(next instanceof LWord)) { return false; }
+			LWord nword = (LWord)next;
+			if (nword.type != LWord.Type.Call) { return false; }
+			if (!"stop".equals(nword.value)) { return false; }
+		}
+
 		// we can tail-call if we're a base statement in our procedure:
 		if (s.trace.size() == 0) { return true; }
 

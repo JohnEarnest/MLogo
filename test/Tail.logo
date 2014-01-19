@@ -30,3 +30,10 @@ to notenough :x
 	output notenough sum :x 1
 end
 print notenough 0
+
+# a different way to terminate a tail call:
+to evenmore :x
+	if greater? :x 0 [ evenmore difference :x 1 stop ]
+	print 'evenmore!
+end
+evenmore 2000
