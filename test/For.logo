@@ -9,11 +9,6 @@ end
 
 for 'x 5 [ print :x ]
 
-
-# this one would come out a lot cleaner
-# if we had support for implicit 'output'
-# at the end of a block:
-
 to while :cond :body
 	unless cond [stop]
 	body
