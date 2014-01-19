@@ -26,7 +26,7 @@ public class Environment {
 	public Environment() {}
 
 	void push(LList code, boolean procedure) {
-		if (scopes.size() > 1000) {
+		if (scopes.size() > Interpreter.RECURSION_LIMIT && Interpreter.RECURSION_LIMIT != 0) {
 			throw new RuntimeError(this, "Stack overflow!");
 		}
 		scopes.push(new Scope(code, procedure));

@@ -10,6 +10,16 @@ import java.util.*;
 
 public class Interpreter {
 
+	/**
+	* The number of activation frames which the interpreter
+	* is allowed to create before signaling a stack overflow.
+	* Note that the global scope and invocation of primitives
+	* contributes to this count, so it is not strictly
+	* a measurement of how many procedure calls are in flight.
+	* If this is set to 0, no limit will be enforced.
+	**/
+	public static int RECURSION_LIMIT = 1000;
+
 	private Interpreter() {}
 
 	/**
