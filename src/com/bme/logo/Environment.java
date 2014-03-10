@@ -82,7 +82,13 @@ public class Environment {
 		set(scopes.get(scopes.size()-2).bindings, name, value);
 	}
 
-	void make(LWord name, LAtom value) {
+	/**
+	* Associate a name with a value in the current scope.
+	*
+	* @param name the name of the new binding.
+	* @param value the value of the new binding.
+	**/
+	public void make(LWord name, LAtom value) {
 		for(int z = scopes.size()-2; z >= 1; z--) {
 			if (scopes.get(z).bindings.containsKey(name)) {
 				set(scopes.get(z).bindings, name, value);
