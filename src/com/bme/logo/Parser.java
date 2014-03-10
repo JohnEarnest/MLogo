@@ -1,5 +1,7 @@
 package com.bme.logo;
 
+import java.util.*;
+
 /**
 * <p>The Parser can convert raw Strings into LList objects recursively
 * composed of LLists, LWords and LNumbers. In addition to basic translation,
@@ -161,18 +163,19 @@ public class Parser {
 	/**
 	* Determine whether a String contains a complete,
 	* parseable expression with closing brackets,
-	* parentheses and to...end, respecting comments
-	* and token delimiters. Useful for implementing
-	* multiline REPLs.
+	* parentheses and to...end, respecting comments, nesting
+	* and token delimiters. If the String is not complete,
+	* return a Stack of tokens necessary for the expression
+	* to be well-formed, in the order they should appear.
+	* Useful for implementing multiline REPLs.
 	*
 	* @param s the String to consider.
+	* @return an empty Stack if the expression is complete or a list of closing tokens.
 	**/
-	public static boolean complete(String s) {
+	public static Stack<String> complete(String s) {
 		Cursor c = new Cursor(s);
-		int parens   = 0;
-		int brackets = 0;
-		int to       = 0;
-
+		Stack<String> r = new Stack<String>();
+		
 		while(true) {
 			c.trim();
 			if (c.eof()) { break; }
@@ -180,19 +183,28 @@ public class Parser {
 				while(!c.eof() && c.curr() != '\n') { c.skip(); }
 				continue;
 			}
-			if (c.curr() == '(') { parens++;   c.skip(); continue; }
-			if (c.curr() == ')') { parens--;   c.skip(); continue; }
-			if (c.curr() == '[') { brackets++; c.skip(); continue; }
-			if (c.curr() == ']') { brackets--; c.skip(); continue; }
-			if (c.match("to ") ) { to++;                 continue; }
-			if (c.match("end ")) { to--;                 continue; }
-			if (c.tokenChar())   { c.token();            continue; }
-			if (c.signed())      { c.number();           continue; }
+			if (c.curr() == ')') {
+				if (!r.peek().equals(")")) { throw new SyntaxError(c, "missing '%s' ?", r.peek()); }
+				r.pop(); c.skip(); continue;
+			}
+			if (c.curr() == ']') {
+				if (!r.peek().equals("]")) { throw new SyntaxError(c, "missing '%s' ?", r.peek()); }
+				r.pop(); c.skip(); continue;
+			}
+			if (c.match("end ")) {
+				if (!r.peek().equals("end")) { throw new SyntaxError(c, "missing '%s' ?", r.peek()); }
+				r.pop(); continue;
+			}
+			if (c.curr() == '(') { r.push(")"); c.skip(); continue; }
+			if (c.curr() == '[') { r.push("]"); c.skip(); continue; }
+			if (c.match("to "))  { r.push("end");         continue; }
+			if (c.tokenChar())   { c.token();             continue; }
+			if (c.signed())      { c.number();            continue; }
 
 			if ("+-*/%><=:'".indexOf(c.curr()) >= 0) { c.skip(); continue; }
 			throw new SyntaxError(c, "invalid character '%c'!", c.curr());
 		}
-		return (parens <= 0) && (brackets <= 0) && (to <= 0);
+		return r;
 	}
 }
 

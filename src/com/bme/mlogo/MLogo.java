@@ -59,13 +59,24 @@ public class MLogo {
 
 		while(true) {
 			System.out.print(">");
-			String line = in.nextLine();
-			if ("exit".equals(line)) { break; }
-			while(!Parser.complete(line)) {
-				System.out.print(">>");
-				line += "\n" + in.nextLine();
+			try {
+				String line = in.nextLine();
+				if ("exit".equals(line)) { break; }
+				while(Parser.complete(line).size() > 0) {
+					System.out.print(">>");
+					line += "\n" + in.nextLine();
+				}
+				runString(env, line, t);
 			}
-			runString(env, line, t);
+			catch(SyntaxError e) {
+				System.out.format("syntax error: %s%n", e.getMessage());
+				System.out.format("\t%s%n\t", e.line);
+				for(int z = 0; z < e.lineIndex; z++) {
+					System.out.print(e.line.charAt(z) == '\t' ? '\t' : ' ');
+				}
+				System.out.println("^");
+				env.reset();
+			}
 		}
 		System.exit(0);
 	}
@@ -84,15 +95,6 @@ public class MLogo {
 					catch(InterruptedException e) {}
 				}
 			}
-		}
-		catch(SyntaxError e) {
-			System.out.format("syntax error: %s%n", e.getMessage());
-			System.out.format("\t%s%n\t", e.line);
-			for(int z = 0; z < e.lineIndex; z++) {
-				System.out.print(e.line.charAt(z) == '\t' ? '\t' : ' ');
-			}
-			System.out.println("^");
-			env.reset();
 		}
 		catch(RuntimeError e) {
 			System.out.format("runtime error: %s%n", e.getMessage());
