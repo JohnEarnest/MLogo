@@ -66,6 +66,23 @@ public class Interpreter {
 		return false;
 	}
 
+	/**
+	* Execute a running program until it completes,
+	* it is paused by a primitive procedure or
+	* it reaches a specified tick timeout.
+	* Used in conjunction with {@link #init}.
+	*
+	* @param e an environment within which to execute the program.
+	* @param maxTicks the maximum number of execution ticks to allow before returning.
+	* @return true if the program has been paused or timed out, false if it has completed.
+	**/
+	public static boolean runUntil(Environment e, int maxTicks) {
+		for(int z = 0; z < maxTicks && !e.paused; z++) {
+			if (!tick(e)) { return false; }
+		}
+		return true;
+	}
+
 	private static boolean tick(Environment e) {
 		Scope s = e.scopes.peek();
 
