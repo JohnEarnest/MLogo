@@ -340,7 +340,13 @@ public class Primitives {
 		return word(e, o);
 	}
 
-	static boolean prim(LList code) {
+	/**
+	* Identify LLists representing primitive procedures.
+	*
+	* @param code an LList to check.
+	* @return true if the provided LList is a primitive procedure.
+	**/
+	public static boolean prim(LList code) {
 		if (code == null)   { return false; }
 		if (code.size() != 1) { return false; }
 		LAtom a = code.first();
