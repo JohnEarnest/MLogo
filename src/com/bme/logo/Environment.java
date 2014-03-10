@@ -36,6 +36,7 @@ public class Environment {
 		// we must be at the end of the current code list:
 		if (scopes.peek().index < scopes.peek().code.size()-1) { return false; }
 		// there must be some expression in a lower scope which wants a result:
+		if (scopes.size() < 2) { return false; }
 		if (scopes.get(scopes.size()-2).trace.size() < 1) { return false; }
 		return true;
 	}
