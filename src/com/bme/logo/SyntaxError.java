@@ -70,6 +70,16 @@ public class SyntaxError extends LogoError {
 		this.line       = line.toString();
 	}
 
+	/**
+	* Construct a new SyntaxError with a formatted message.
+	*
+	* @param c         a Cursor indicating the parser's position.
+	* @param errorType the class of error which produced this exception.
+	**/
+	SyntaxError(Cursor c, Type errorType) {
+		this(c, errorType, null);
+	}
+
 	public static enum Type {
 		MissingToken    ("missing '%s'?"),
 		MissingName     ("word name expected!"),
@@ -78,6 +88,6 @@ public class SyntaxError extends LogoError {
 		ToWithoutEnd    ("'to' without 'end'!");
 
 		public final String format;
-		Type(String format) { this.format = format; }
+		private Type(String format) { this.format = format; }
 	}
 }

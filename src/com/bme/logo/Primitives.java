@@ -209,7 +209,7 @@ public class Primitives {
 				e.scopes.pop();
 				while(!e.scopes.peek().procedure || prim(e.scopes.peek().code)) {
 					if (e.scopes.size() <= 1) {
-						throw new RuntimeError(e, "I can't stop; I'm not running a procedure!");
+						throw new RuntimeError(e, RuntimeError.Type.OutsideProcedure, "stop");
 					}
 					e.scopes.pop();
 				}
@@ -222,7 +222,7 @@ public class Primitives {
 				e.scopes.pop();
 				while(!e.scopes.peek().procedure || prim(e.scopes.peek().code)) {
 					if (e.scopes.size() <= 1) {
-						throw new RuntimeError(e, "I can't output; I'm not running a procedure!");
+						throw new RuntimeError(e, RuntimeError.Type.OutsideProcedure, "output");
 					}
 					e.scopes.pop();
 				}
@@ -289,12 +289,12 @@ public class Primitives {
 
 	static LWord word(Environment e, LAtom o) {
 		if (o instanceof LWord) { return (LWord)o; }
-		throw new RuntimeError(e, "'%s' is not a word!", o);
+		throw new RuntimeError(e, RuntimeError.Type.TypeMismatch, o, "word");
 	}
 
 	static LList list(Environment e, LAtom o) {
 		if (o instanceof LList) { return (LList)o; }
-		throw new RuntimeError(e, "'%s' is not a list!", o);
+		throw new RuntimeError(e, RuntimeError.Type.TypeMismatch, o, "list");
 	}
 
 	/**
@@ -307,12 +307,12 @@ public class Primitives {
 	public static int num(Environment e, LWord key) {
 		LAtom o = e.thing(key);
 		if (o instanceof LNumber) { return ((LNumber)o).value; }
-		throw new RuntimeError(e, "'%s' is not a number!", o);
+		throw new RuntimeError(e, RuntimeError.Type.TypeMismatch, o, "number");
 	}
 
 	private static int nonzero(Environment e, LWord key) {
 		int ret = num(e, key);
-		if (ret == 0) { throw new RuntimeError(e, "I cannot divide by zero."); }
+		if (ret == 0) { throw new RuntimeError(e, RuntimeError.Type.DivideByZero); }
 		return ret;
 	}
 

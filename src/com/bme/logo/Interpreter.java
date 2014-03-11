@@ -104,7 +104,7 @@ public class Interpreter {
 		// check for an exhausted list
 		if (s.index >= s.code.size()) {
 			if (s.trace.size() > 0) {
-				throw new RuntimeError(e, "Not enough arguments for '%s'!",
+				throw new RuntimeError(e, RuntimeError.Type.NotEnoughArguments,
 					e.getName(s.trace.peek().code)
 				);
 			}

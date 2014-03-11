@@ -27,7 +27,7 @@ public class Environment {
 
 	void push(LList code, boolean procedure) {
 		if (scopes.size() > Interpreter.RECURSION_LIMIT && Interpreter.RECURSION_LIMIT != 0) {
-			throw new RuntimeError(this, "Stack overflow!");
+			throw new RuntimeError(this, RuntimeError.Type.StackOverflow);
 		}
 		scopes.push(new Scope(code, procedure));
 	}
@@ -44,7 +44,7 @@ public class Environment {
 	void value(LAtom a) {
 		if (scopes.peek().trace.size() < 1) {
 			if (!implicitOutput(a)) {
-				throw new RuntimeError(this, "I don't know what to do with '%s'!", a);
+				throw new RuntimeError(this, RuntimeError.Type.UnusedValue, a);
 			}
 			else {
 				scopes.get(scopes.size() - 2).trace.peek().vals.add(a);
@@ -69,10 +69,7 @@ public class Environment {
 	private void set(Map<LWord, LAtom> bindings, LWord name, LAtom value) {
 		if (bindings.containsKey(name) && bindings.get(name) instanceof LList) {
 			if (Primitives.prim((LList)bindings.get(name))) {
-				throw new RuntimeError(this,
-					"The word '%s' is primitive and cannot be reassigned.",
-					name.value
-				);
+				throw new RuntimeError(this, RuntimeError.Type.MutatePrimitive, name.value);
 			}
 		}
 		bindings.put(name, value);
@@ -110,7 +107,7 @@ public class Environment {
 				return scopes.get(z).bindings.get(name);
 			}
 		}
-		throw new RuntimeError(this, "'%s' has no value!", name.value);
+		throw new RuntimeError(this, RuntimeError.Type.UndefinedName, name.value);
 	}
 
 	LAtom getName(LAtom value) {
@@ -130,7 +127,7 @@ public class Environment {
 				return;
 			}
 		}
-		throw new RuntimeError(this, "I don't know how to '%s'!", name.value);
+		throw new RuntimeError(this, RuntimeError.Type.UndefinedProcedure, name.value);
 	}
 
 	/**
