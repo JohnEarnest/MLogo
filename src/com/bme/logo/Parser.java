@@ -185,14 +185,17 @@ public class Parser {
 				continue;
 			}
 			if (c.curr() == ')') {
+				if (r.size() < 1) { throw new SyntaxError(c, MissingToken, "("); }
 				if (!r.peek().equals(")")) { throw new SyntaxError(c, MissingToken, r.peek()); }
 				r.pop(); c.skip(); continue;
 			}
 			if (c.curr() == ']') {
+				if (r.size() < 1) { throw new SyntaxError(c, MissingToken, "["); }
 				if (!r.peek().equals("]")) { throw new SyntaxError(c, MissingToken, r.peek()); }
 				r.pop(); c.skip(); continue;
 			}
 			if (c.match("end ")) {
+				if (r.size() < 1) { throw new SyntaxError(c, MissingToken, "to"); }
 				if (!r.peek().equals("end")) { throw new SyntaxError(c, MissingToken, r.peek()); }
 				r.pop(); continue;
 			}
