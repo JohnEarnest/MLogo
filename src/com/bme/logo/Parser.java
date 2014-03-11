@@ -1,4 +1,5 @@
 package com.bme.logo;
+import static com.bme.logo.SyntaxError.Type.*;
 
 import java.util.*;
 
@@ -58,7 +59,7 @@ public class Parser {
 		if (c.starts(':' )) { c.skip(); return new LWord(LWord.Type.Value, c.token()); }
 		if (c.tokenChar())  {           return new LWord(LWord.Type.Call,  c.token()); }
 		if (c.signed())     { return new LNumber(c.number()); }
-		throw new SyntaxError(c, "invalid character '%c'!", c.curr());
+		throw new SyntaxError(c, InvalidCharacter, ""+c.curr());
 	}
 
 	private static LList infixUnary(Cursor c, LList r) {
@@ -66,7 +67,7 @@ public class Parser {
 		if (c.match("-")) { return infixUnary(c, r.lput(negate)); }
 		if (c.match("(")) {
 			while(!c.match(")")) {
-				if (c.eof()) { throw new SyntaxError(c, "missing ')' ?"); }
+				if (c.eof()) { throw new SyntaxError(c, MissingToken, ")"); }
 				r = infix(c, r);
 			}
 			return r;
@@ -76,18 +77,18 @@ public class Parser {
 			int endindex = -1;
 			String basetext = c.text;
 			StringBuilder wordname = new StringBuilder();
-			if (!c.tokenChar()) { throw new SyntaxError(c, "word name expected!"); }
+			if (!c.tokenChar()) { throw new SyntaxError(c, MissingName, null); }
 			while(c.tokenChar()) { wordname.append(c.curr()); c.skip(); }
 			LWord word = new LWord(LWord.Type.Name, wordname.toString());
 
 			LList args = new LList();
 			while(true) {
-				if (c.eof()) { throw new SyntaxError(c, "incomplete 'to' block!"); }
+				if (c.eof()) { throw new SyntaxError(c, ToWithoutEnd, null); }
 				if (c.curr() == '\n') { break; }
 				while(!c.eof() && c.curr() != '\n' && c.white()) { c.skip(); }
 				if (c.curr() == '\n') { break; }
 				if (c.curr() != ':') {
-					throw new SyntaxError(c, "'to' arguments must begin with ':'!");
+					throw new SyntaxError(c, ArgumentNoColon, null);
 				}
 				c.skip();
 				StringBuilder name = new StringBuilder();
@@ -103,7 +104,7 @@ public class Parser {
 			while(true) {
 				endindex = c.index;
 				if (c.match("end ")) { break; }
-				if (c.eof()) { throw new SyntaxError(c, "'to' without 'end'!"); }
+				if (c.eof()) { throw new SyntaxError(c, ToWithoutEnd, null); }
 				body = infixUnary(c, body);
 			}
 
@@ -139,7 +140,7 @@ public class Parser {
 	private static LList parseList(Cursor c) {
 		LList r = new LList();
 		while(!c.match("]")) {
-			if (c.eof()) { throw new SyntaxError(c, "missing ']' ?"); }
+			if (c.eof()) { throw new SyntaxError(c, MissingToken, "]"); }
 			r = infixUnary(c, r);
 		}
 		return r;
@@ -184,15 +185,15 @@ public class Parser {
 				continue;
 			}
 			if (c.curr() == ')') {
-				if (!r.peek().equals(")")) { throw new SyntaxError(c, "missing '%s' ?", r.peek()); }
+				if (!r.peek().equals(")")) { throw new SyntaxError(c, MissingToken, r.peek()); }
 				r.pop(); c.skip(); continue;
 			}
 			if (c.curr() == ']') {
-				if (!r.peek().equals("]")) { throw new SyntaxError(c, "missing '%s' ?", r.peek()); }
+				if (!r.peek().equals("]")) { throw new SyntaxError(c, MissingToken, r.peek()); }
 				r.pop(); c.skip(); continue;
 			}
 			if (c.match("end ")) {
-				if (!r.peek().equals("end")) { throw new SyntaxError(c, "missing '%s' ?", r.peek()); }
+				if (!r.peek().equals("end")) { throw new SyntaxError(c, MissingToken, r.peek()); }
 				r.pop(); continue;
 			}
 			if (c.curr() == '(') { r.push(")"); c.skip(); continue; }
@@ -202,7 +203,7 @@ public class Parser {
 			if (c.signed())      { c.number();            continue; }
 
 			if ("+-*/%><=:'".indexOf(c.curr()) >= 0) { c.skip(); continue; }
-			throw new SyntaxError(c, "invalid character '%c'!", c.curr());
+			throw new SyntaxError(c, InvalidCharacter, ""+c.curr());
 		}
 		return r;
 	}

@@ -11,6 +11,12 @@ public class SyntaxError extends LogoError {
 	
 	static final long serialVersionUID = 1;
 
+	/** The class of syntax error which produced this exception. **/
+	public final Type type;
+
+	/** The argument related to this syntax error type or null if none. **/
+	public final String arg;
+
 	/** The complete string which was originally being parsed. **/
 	public final String sourceText;
 
@@ -29,12 +35,14 @@ public class SyntaxError extends LogoError {
 	/**
 	* Construct a new SyntaxError with a formatted message.
 	*
-	* @param c       a Cursor indicating the parser's position.
-	* @param message the format string describing the error.
-	* @param args    the arguments for the format string.
+	* @param c         a Cursor indicating the parser's position.
+	* @param errorType the class of error which produced this exception.
+	* @param args      the argument for this error class or null if none.
 	**/
-	SyntaxError(Cursor c, String message, Object... args) {
-		super(String.format(message, args));
+	SyntaxError(Cursor c, Type errorType, String arg) {
+		super(String.format(errorType.format, arg));
+		this.type       = errorType;
+		this.arg        = arg;
 		this.sourceText = c.originalText;
 		this.index      = c.index;
 
@@ -60,5 +68,16 @@ public class SyntaxError extends LogoError {
 		this.lineNumber = lines;
 		this.lineIndex  = chars;
 		this.line       = line.toString();
+	}
+
+	public static enum Type {
+		MissingToken    ("missing '%s'?"),
+		MissingName     ("word name expected!"),
+		InvalidCharacter("invalid character '%s'!"),
+		ArgumentNoColon ("'to' arguments must begin with ':'!"),
+		ToWithoutEnd    ("'to' without 'end'!");
+
+		public final String format;
+		Type(String format) { this.format = format; }
 	}
 }
