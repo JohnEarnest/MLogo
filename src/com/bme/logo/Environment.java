@@ -195,6 +195,11 @@ public class Environment {
 	}
 
 	/**
+	* Check to see if the environment is paused.
+	**/
+	public boolean isPaused() { return paused; }
+
+	/**
 	* Pause execution of this program.
 	**/
 	public void pause() { paused = true; }
