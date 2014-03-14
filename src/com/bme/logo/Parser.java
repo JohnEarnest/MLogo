@@ -38,7 +38,7 @@ public class Parser {
 
 	private Parser() {}
 
-	static final String token = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMOPQRSTUVWXYZ.,!?";
+	static final String token = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.,!?";
 	static final String digit = "0123456789";
 
 	private static final LWord local      = new LWord(LWord.Type.Call, "local");
