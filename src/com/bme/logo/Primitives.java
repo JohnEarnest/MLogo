@@ -24,7 +24,7 @@ public class Primitives {
 	private static final LWord ARGUMENTS = new LWord(LWord.Type.Name, "arguments");
 	private static final LWord BODY      = new LWord(LWord.Type.Name, "bodyList");
 	private static final LWord CONDITION = new LWord(LWord.Type.Name, "condition");
-	private static final LWord COUNT     = new LWord(LWord.Type.Name, "count");
+	private static final LWord COUNT     = new LWord(LWord.Type.Name, "repeatCount");
 	private static final LWord NAME      = new LWord(LWord.Type.Name, "name");
 	private static final LWord VALUE     = new LWord(LWord.Type.Name, "value");
 
@@ -244,9 +244,9 @@ public class Primitives {
 		}, VALUE);
 		e.bind(new LWord(LWord.Type.Prim, "run") {
 			public void eval(Environment e) {
-				e.push(list(e, LIST), false);
+				e.push(list(e, BODY), false);
 			}
-		}, LIST);
+		}, BODY);
 		e.bind(new LWord(LWord.Type.Prim, "if") {
 			public void eval(Environment e) {
 				if (bool(e.thing(CONDITION))) { e.push(list(e, BODY), false); }
