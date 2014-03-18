@@ -14,8 +14,20 @@ public class Primitives {
 
 	private Primitives() {}
 
-	private static LWord a = new LWord(LWord.Type.Name, "argument1");
-	private static LWord b = new LWord(LWord.Type.Name, "argument2");
+	private static final LWord A         = new LWord(LWord.Type.Name, "a");
+	private static final LWord B         = new LWord(LWord.Type.Name, "b");
+	private static final LWord RANGE     = new LWord(LWord.Type.Name, "range");
+	private static final LWord ATOM      = new LWord(LWord.Type.Name, "atom");
+	private static final LWord WORD      = new LWord(LWord.Type.Name, "word");
+	private static final LWord LIST      = new LWord(LWord.Type.Name, "list");
+	private static final LWord INDEX     = new LWord(LWord.Type.Name, "index");
+	private static final LWord ARGUMENTS = new LWord(LWord.Type.Name, "arguments");
+	private static final LWord BODY      = new LWord(LWord.Type.Name, "bodyList");
+	private static final LWord CONDITION = new LWord(LWord.Type.Name, "condition");
+	private static final LWord COUNT     = new LWord(LWord.Type.Name, "count");
+	private static final LWord NAME      = new LWord(LWord.Type.Name, "name");
+	private static final LWord VALUE     = new LWord(LWord.Type.Name, "value");
+
 
 	public static Environment kernel() {
 		Environment e = new Environment();
@@ -24,182 +36,182 @@ public class Primitives {
 
 		e.bind(new LWord(LWord.Type.Prim, "sum") {
 			public void eval(Environment e) {
-				e.output(new LNumber(num(e, a) + num(e, b)));
+				e.output(new LNumber(num(e, A) + num(e, B)));
 			}
-		}, a, b);
+		}, A, B);
 		e.bind(new LWord(LWord.Type.Prim, "difference") {
 			public void eval(Environment e) {
-				e.output(new LNumber(num(e, a) - num(e, b)));
+				e.output(new LNumber(num(e, A) - num(e, B)));
 			}
-		}, a, b);
+		}, A, B);
 		e.bind(new LWord(LWord.Type.Prim, "product") {
 			public void eval(Environment e) {
-				e.output(new LNumber(num(e, a) * num(e, b)));
+				e.output(new LNumber(num(e, A) * num(e, B)));
 			}
-		}, a, b);
+		}, A, B);
 		e.bind(new LWord(LWord.Type.Prim, "quotient") {
 			public void eval(Environment e) {
-				e.output(new LNumber(num(e, a) / nonzero(e, b)));
+				e.output(new LNumber(num(e, A) / nonzero(e, B)));
 			}
-		}, a, b);
+		}, A, B);
 		e.bind(new LWord(LWord.Type.Prim, "remainder") {
 			public void eval(Environment e) {
-				int x = num(e, a);
-				int y = nonzero(e, b);
+				int x = num(e, A);
+				int y = nonzero(e, B);
 				x %= y;
 				e.output(new LNumber(x < 0 ? x+y : x));
 			}
-		}, a, b);
+		}, A, B);
 		e.bind(new LWord(LWord.Type.Prim, "negate") {
 			public void eval(Environment e) {
-				e.output(new LNumber(num(e, a) * -1));
+				e.output(new LNumber(num(e, A) * -1));
 			}
-		}, a);
+		}, A);
 		e.bind(new LWord(LWord.Type.Prim, "less?") {
 			public void eval(Environment e) {
-				e.output(toBool(num(e, a) < num(e, b)));
+				e.output(toBool(num(e, A) < num(e, B)));
 			}
-		}, a, b);
+		}, A, B);
 		e.bind(new LWord(LWord.Type.Prim, "greater?") {
 			public void eval(Environment e) {
-				e.output(toBool(num(e, a) > num(e, b)));
+				e.output(toBool(num(e, A) > num(e, B)));
 			}
-		}, a, b);
+		}, A, B);
 		e.bind(new LWord(LWord.Type.Prim, "equal?") {
 			public void eval(Environment e) {
-				e.output(toBool(e.thing(a).equals(e.thing(b))));
+				e.output(toBool(e.thing(A).equals(e.thing(B))));
 			}
-		}, a, b);
+		}, A, B);
 		e.bind(new LWord(LWord.Type.Prim, "random") {
 			public void eval(Environment e) {
-				e.output(new LNumber((int)(Math.random() * num(e, a))));
+				e.output(new LNumber((int)(Math.random() * num(e, RANGE))));
 			}
-		}, a);
+		}, RANGE);
 
 		// type conversions and predicates:
 		
 		e.bind(new LWord(LWord.Type.Prim, "word?") {
 			public void eval(Environment e) {
-				e.output(toBool(e.thing(a) instanceof LWord));
+				e.output(toBool(e.thing(ATOM) instanceof LWord));
 			}
-		}, a);
+		}, ATOM);
 		e.bind(new LWord(LWord.Type.Prim, "list?") {
 			public void eval(Environment e) {
-				e.output(toBool(e.thing(a) instanceof LList));
+				e.output(toBool(e.thing(ATOM) instanceof LList));
 			}
-		}, a);
+		}, ATOM);
 		e.bind(new LWord(LWord.Type.Prim, "num?") {
 			public void eval(Environment e) {
-				e.output(toBool(e.thing(a) instanceof LNumber));
+				e.output(toBool(e.thing(ATOM) instanceof LNumber));
 			}
-		}, a);
+		}, ATOM);
 		e.bind(new LWord(LWord.Type.Prim, "asname") {
 			public void eval(Environment e) {
-				e.output(new LWord(LWord.Type.Name, word(e, a).value));
+				e.output(new LWord(LWord.Type.Name, word(e, WORD).value));
 			}
-		}, a);
+		}, WORD);
 		e.bind(new LWord(LWord.Type.Prim, "asvalue") {
 			public void eval(Environment e) {
-				e.output(new LWord(LWord.Type.Value, word(e, a).value));
+				e.output(new LWord(LWord.Type.Value, word(e, WORD).value));
 			}
-		}, a);
+		}, WORD);
 		e.bind(new LWord(LWord.Type.Prim, "ascall") {
 			public void eval(Environment e) {
-				e.output(new LWord(LWord.Type.Call, word(e, a).value));
+				e.output(new LWord(LWord.Type.Call, word(e, WORD).value));
 			}
-		}, a);
+		}, WORD);
 
 
 		// list manipulation:
 
 		e.bind(new LWord(LWord.Type.Prim, "size") {
 			public void eval(Environment e) {
-				e.output(new LNumber(list(e, a).size()));
+				e.output(new LNumber(list(e, LIST).size()));
 			}
-		}, a);
+		}, LIST);
 		e.bind(new LWord(LWord.Type.Prim, "first") {
 			public void eval(Environment e) {
-				e.output(list(e, a).first());
+				e.output(list(e, LIST).first());
 			}
-		}, a);
+		}, LIST);
 		e.bind(new LWord(LWord.Type.Prim, "last") {
 			public void eval(Environment e) {
-				e.output(list(e, a).last());
+				e.output(list(e, LIST).last());
 			}
-		}, a);
+		}, LIST);
 		e.bind(new LWord(LWord.Type.Prim, "butfirst") {
 			public void eval(Environment e) {
-				e.output(list(e, a).butFirst());
+				e.output(list(e, LIST).butFirst());
 			}
-		}, a);
+		}, LIST);
 		e.bind(new LWord(LWord.Type.Prim, "butlast") {
 			public void eval(Environment e) {
-				e.output(list(e, a).butLast());
+				e.output(list(e, LIST).butLast());
 			}
-		}, a);
+		}, LIST);
 		e.bind(new LWord(LWord.Type.Prim, "flatten") {
 			public void eval(Environment e) {
-				e.output(list(e, a).flatten());
+				e.output(list(e, LIST).flatten());
 			}
-		}, a);
+		}, LIST);
 		e.bind(new LWord(LWord.Type.Prim, "item") {
 			public void eval(Environment e) {
-				e.output(list(e, b).item(num(e, a)));
+				e.output(list(e, LIST).item(num(e, INDEX)));
 			}
-		}, a, b);
+		}, INDEX, LIST);
 		e.bind(new LWord(LWord.Type.Prim, "fput") {
 			public void eval(Environment e) {
-				e.output(list(e, b).fput(e.thing(a)));
+				e.output(list(e, LIST).fput(e.thing(ATOM)));
 			}
-		}, a, b);
+		}, ATOM, LIST);
 		e.bind(new LWord(LWord.Type.Prim, "lput") {
 			public void eval(Environment e) {
-				e.output(list(e, b).lput(e.thing(a)));
+				e.output(list(e, LIST).lput(e.thing(ATOM)));
 			}
-		}, a, b);
+		}, ATOM, LIST);
 		e.bind(new LWord(LWord.Type.Prim, "join") {
 			public void eval(Environment e) {
-				e.output(list(e, a).join(list(e, b)));
+				e.output(list(e, A).join(list(e, B)));
 			}
-		}, a, b);
+		}, A, B);
 		e.bind(new LWord(LWord.Type.Prim, "member") {
 			public void eval(Environment e) {
-				e.output(list(e, b).member(e.thing(a)));
+				e.output(list(e, LIST).member(e.thing(ATOM)));
 			}
-		}, a, b);
+		}, ATOM, LIST);
 
 
 		// values and scopes:
 
 		e.bind(new LWord(LWord.Type.Prim, "local") {
 			public void eval(Environment e) {
-				e.local(word(e, a), e.thing(b));
+				e.local(word(e, NAME), e.thing(VALUE));
 			}
-		}, a, b);
+		}, NAME, VALUE);
 		e.bind(new LWord(LWord.Type.Prim, "make") {
 			public void eval(Environment e) {
-				e.make(word(e, a), e.thing(b));
+				e.make(word(e, NAME), e.thing(VALUE));
 			}
-		}, a, b);
+		}, NAME, VALUE);
 		e.bind(new LWord(LWord.Type.Prim, "thing") {
 			public void eval(Environment e) {
-				e.output(e.thing(word(e, a)));
+				e.output(e.thing(word(e, WORD)));
 			}
-		}, a);
+		}, WORD);
 		e.bind(new LWord(LWord.Type.Prim, "bind") {
 			public void eval(Environment e) {
-				LList body = list(e, b);
-				LList ret = new LList(body, list(e, a));
+				LList body = list(e, BODY);
+				LList ret = new LList(body, list(e, ARGUMENTS));
 				ret.sourceText = body.sourceText;
 				e.output(ret);
 			}
-		}, a, b);
+		}, ARGUMENTS, BODY);
 		e.bind(new LWord(LWord.Type.Prim, "args") {
 			public void eval(Environment e) {
-				LList code = list(e, a);
+				LList code = list(e, LIST);
 				e.output(code.arguments != null ? code.arguments : new LList());
 			}
-		}, a);
+		}, LIST);
 
 
 		// control:
@@ -218,7 +230,7 @@ public class Primitives {
 		});
 		e.bind(new LWord(LWord.Type.Prim, "output") {
 			public void eval(Environment e) {
-				LAtom r = e.thing(a);
+				LAtom r = e.thing(VALUE);
 				e.scopes.pop();
 				while(!e.scopes.peek().procedure || prim(e.scopes.peek().code)) {
 					if (e.scopes.size() <= 1) {
@@ -229,34 +241,34 @@ public class Primitives {
 				e.scopes.pop();
 				e.value(r);
 			}
-		}, a);
+		}, VALUE);
 		e.bind(new LWord(LWord.Type.Prim, "run") {
 			public void eval(Environment e) {
-				e.push(list(e, a), false);
+				e.push(list(e, LIST), false);
 			}
-		}, a);
+		}, LIST);
 		e.bind(new LWord(LWord.Type.Prim, "if") {
 			public void eval(Environment e) {
-				if (bool(e.thing(a))) { e.push(list(e, b), false); }
+				if (bool(e.thing(CONDITION))) { e.push(list(e, BODY), false); }
 			}
-		}, a, b);
+		}, CONDITION, BODY);
 		e.bind(new LWord(LWord.Type.Prim, "unless") {
 			public void eval(Environment e) {
-				if (!bool(e.thing(a))) { e.push(list(e, b), false); }
+				if (!bool(e.thing(CONDITION))) { e.push(list(e, BODY), false); }
 			}
-		}, a, b);
+		}, CONDITION, BODY);
 		e.bind(new LWord(LWord.Type.Prim, "repeat") {
 			public void eval(Environment e) {
-				int index = num(e, a);
+				int index = num(e, COUNT);
 				if (index == 0) {
 					e.scopes.pop();
 					return;
 				}
-				e.scopes.peek().bindings.put(a, new LNumber(index - 1));
+				e.scopes.peek().bindings.put(COUNT, new LNumber(index - 1));
 				e.scopes.peek().index--;
-				e.push(list(e, b), false);
+				e.push(list(e, BODY), false);
 			}
-		}, a, b);
+		}, COUNT, BODY);
 
 		return e;
 	}
