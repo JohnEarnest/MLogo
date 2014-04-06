@@ -265,7 +265,7 @@ public class Primitives {
 					return;
 				}
 				e.scopes.peek().bindings.put(COUNT, new LNumber(index - 1));
-				e.scopes.peek().index--;
+				e.loop();
 				e.push(list(e, BODY), false);
 			}
 		}, COUNT, BODY);

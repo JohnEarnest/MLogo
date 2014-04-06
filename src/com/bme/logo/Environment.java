@@ -25,6 +25,24 @@ public class Environment {
 	**/
 	public Environment() {}
 
+	/**
+	* Schedule a chunk of code to be executed.
+	* Used for implementing primitives like 'run'.
+	*
+	* @param code the LList to execute.
+	**/
+	public void push(LList code) {
+		push(code, false);
+	}
+
+	/**
+	* Schedule the current primitive procedure
+	* to be evaluated again, as with primitives like 'repeat'.
+	**/
+	public void loop() {
+		scopes.peek().index--;
+	}
+
 	void push(LList code, boolean procedure) {
 		if (scopes.size() > Interpreter.RECURSION_LIMIT && Interpreter.RECURSION_LIMIT != 0) {
 			throw new RuntimeError(this, RuntimeError.Type.StackOverflow);
