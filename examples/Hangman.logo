@@ -1,0 +1,65 @@
+to either :flag :a :b
+ if :flag [output :a] output :b
+end
+
+to any :list
+ item random size :list :list
+end
+
+to letter? :atom
+ member :atom [a b c d e f g h i j k l m n o p q r s t u v w x y z]
+end
+
+to intersect :a :b
+ to int :a :r
+  unless :a [output :r]
+  unless member first :a :r
+  [if member first :a :b [output int butfirst :a fput first :a :r]]
+  int butfirst :a :r
+ end
+ int :a []
+end
+
+to map :list :func
+ to maprec :list :sofar
+  unless :list [output :sofar]
+  maprec (butfirst :list) (lput func first :list :sofar)
+ end
+ maprec :list []
+end
+
+to guess
+ print [what letter do you guess?]
+ local 'choice first readlist
+ unless letter? :choice     [print [that is not a valid letter.]           output guess]
+ if member :choice :guessed [print [you have already guessed that letter.] output guess]
+ output :choice
+end
+
+to display
+ print map :word bind [x][either member :x :guessed :x ascall '.]
+end
+
+to won?
+ ((intersect :word :guessed) = (intersect :word :word))
+end
+
+to lost?
+ (((size :guessed) - (size intersect :word :guessed)) > 5)
+end
+
+to hangman
+ to play
+  display
+  if won?  [print [You Win!]  stop]
+  if lost? [print [You Lose!] stop]
+  print fput [Guessed] :guessed
+  make 'guessed fput guess :guessed
+  play
+ end
+ local 'word any [[a a r d v a r k][a p p l e][g o a t s e][e t c]]
+ local 'guessed []
+ play
+end
+
+hangman
