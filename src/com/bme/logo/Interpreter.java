@@ -32,9 +32,7 @@ public class Interpreter {
 	* @param e an environment within which to execute the program.
 	**/
 	public static void run(LList code, Environment e) {
-		e.scopes.peek().code = code;
-		e.scopes.peek().index = 0;
-		e.scopes.peek().trace.clear();
+		init(code, e);
 		while(tick(e)) {}
 	}
 
@@ -49,6 +47,7 @@ public class Interpreter {
 		e.scopes.peek().code = code;
 		e.scopes.peek().index = 0;
 		e.scopes.peek().trace.clear();
+		if (e.tracer != null) { e.tracer.begin(); }
 	}
 
 	/**
@@ -84,6 +83,8 @@ public class Interpreter {
 	}
 
 	private static boolean tick(Environment e) {
+		if (e.tracer != null) { e.tracer.tick(); }
+
 		Scope s = e.scopes.peek();
 
 		//System.err.format("index %d code %s%n", s.index, s.code);
@@ -93,9 +94,18 @@ public class Interpreter {
 			Func f = s.trace.peek();
 			if (f.args.size() == f.vals.size()) {
 				s.trace.pop();
-				newScope(e, f.code);
+				boolean tailCalled = newScope(e, f.code);
 				for(int z = 0; z < f.args.size(); z++) {
 					e.scopes.peek().bindings.put(Primitives.word(e, f.args.item(z)), f.vals.get(z));
+				}
+
+				if (e.tracer != null) {
+					String name = e.getName(f.code).toString();
+					if (name.startsWith("'")) { name = name.substring(1); }
+					Map<LAtom, LAtom> args = new HashMap<LAtom, LAtom>();
+					for(int z = 0; z < f.args.size(); z++) { args.put(f.args.item(z), f.vals.get(z)); }
+					if (Primitives.prim(f.code)) { e.tracer.callPrimitive(name, args); }
+					else { e.tracer.call(name, args, tailCalled); }
 				}
 				return true;
 			}
@@ -109,8 +119,24 @@ public class Interpreter {
 				);
 			}
 			if (e.scopes.size() <= 1) {
+				if (e.tracer != null) { e.tracer.end(); }
 				return false;
 			}
+
+			if (e.tracer != null && !Primitives.prim(e.scopes.peek().code)) {
+				// implied 'stop' or 'output':
+				String name = e.getName(e.scopes.peek().code).toString();
+				if (name.startsWith("'")) { name = name.substring(1); }
+				Stack<Func> f = e.scopes.get(e.scopes.size()-2).trace;
+				if (f.size() > 0 && f.peek().vals.size() > 0) {
+					LAtom last = f.peek().vals.get(f.peek().vals.size()-1);
+					e.tracer.output(name, last, true);
+				}
+				else {
+					e.tracer.stop(name, true);
+				}
+			}
+
 			e.scopes.pop();
 			return true;
 		}
@@ -120,7 +146,7 @@ public class Interpreter {
 		return true;
 	}
 
-	private static void newScope(Environment e, LList code) {
+	private static boolean newScope(Environment e, LList code) {
 		Scope outer = null;
 		for(int z = e.scopes.size()-1; z >= 1; z--) {
 			if (e.scopes.get(z).procedure && !(Primitives.prim(e.scopes.get(z).code))) {
@@ -133,10 +159,12 @@ public class Interpreter {
 			outer.index = 0;
 			outer.trace.clear();
 			outer.bindings.clear();
+			return true;
 		}
 		else {
 			// apply the collected arguments in a new scope
 			e.push(code, true);
+			return false;
 		}
 	}
 

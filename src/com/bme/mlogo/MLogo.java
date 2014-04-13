@@ -14,11 +14,13 @@ public class MLogo {
 		boolean printHelp   = args.size() == 0;
 		boolean interactive = false;
 		boolean turtles     = false;
+		boolean trace       = false;
 
 		for(int z = args.size() - 1; z >= 0; z--) {
 			if ("-h".equals(args.get(z))) { printHelp   = true; args.remove(z--); continue; }
 			if ("-i".equals(args.get(z))) { interactive = true; args.remove(z--); continue; }
 			if ("-t".equals(args.get(z))) { turtles     = true; args.remove(z--); continue; }
+			if ("-T".equals(args.get(z))) { trace       = true; args.remove(z--); continue; }
 		}
 
 		if (printHelp) {
@@ -28,11 +30,12 @@ public class MLogo {
 			System.out.println(" h : print this help message");
 			System.out.println(" i : provide an interactive REPL session");
 			System.out.println(" t : enable turtle graphics during batch mode");
+			System.out.println(" T : enable execution trace");
 			System.out.println();
 		}
 
 		Environment e = kernel();
-		primitiveIO(e);
+		primitiveIO(e, trace);
 
 		// the repl always loads turtle graphics primitives,
 		// but they're strictly opt-in for batch mode.
@@ -163,9 +166,37 @@ public class MLogo {
 		}
 	}
 
-	private static void primitiveIO(Environment e) {
+	private static void primitiveIO(Environment e, boolean trace) {
 		final LWord a = new LWord(LWord.Type.Name, "argument1");
 		final Scanner in = new Scanner(System.in);
+
+		if (trace) {
+			e.setTracer(new Tracer() {
+				public void begin()  { System.out.println("tracer: begin."); }
+				public void end()    { System.out.println("tracer: end.");   }
+				//public void tick() { System.out.println("tracer: tick.");  }
+
+				public void callPrimitive(String name, Map<LAtom, LAtom> args) {
+					System.out.format("trace: PRIM %s%s%n",
+						name,
+						args.size() > 0 ? " " + args : ""
+					);
+				}
+				public void call(String name, Map<LAtom, LAtom> args, boolean tail) {
+					System.out.format("trace: CALL %s%s%s%n",
+						name,
+						args.size() > 0 ? " " + args : "",
+						tail ? " (tail)" : ""
+					);
+				}
+				public void output(String name, LAtom val, boolean implicit) {
+					System.out.format("trace: RETURN %s- %s%s%n", name, val, implicit ? " (implicit)" : "");
+				}
+				public void stop(String name, boolean implicit) {
+					System.out.format("trace: STOP %s%s%n", name, implicit ? " (implicit)" : "");
+				}
+			});
+		}
 
 		e.bind(new LWord(LWord.Type.Prim, "version") {
 			public void eval(Environment e) {

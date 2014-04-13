@@ -225,6 +225,13 @@ public class Primitives {
 					}
 					e.scopes.pop();
 				}
+
+				if (e.tracer != null) {
+					String name = e.getName(e.scopes.peek().code).toString();
+					if (name.startsWith("'")) { name = name.substring(1); }
+					e.tracer.stop(name, false);
+				}
+
 				e.scopes.pop();
 			}
 		});
@@ -238,6 +245,13 @@ public class Primitives {
 					}
 					e.scopes.pop();
 				}
+
+				if (e.tracer != null) {
+					String name = e.getName(e.scopes.peek().code).toString();
+					if (name.startsWith("'")) { name = name.substring(1); }
+					e.tracer.output(name, r, false);
+				}
+
 				e.scopes.pop();
 				e.value(r);
 			}

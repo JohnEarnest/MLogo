@@ -12,6 +12,7 @@ import java.util.*;
 
 public class Environment {
 
+	Tracer tracer = null;
 	boolean paused = false;
 	Stack<Scope> scopes = new Stack<Scope>();
 	{ scopes.push(new Scope(null, false)); }
@@ -226,6 +227,13 @@ public class Environment {
 	* Resume execution of this program.
 	**/
 	public void resume() { paused = false; }
+
+	/**
+	* Set a Tracer which will be fed events as this Environment is executed.
+	*
+	* @param t the new tracer or null.
+	**/
+	public void setTracer(Tracer t) { this.tracer = t; }
 }
 
 class Scope {
