@@ -109,6 +109,7 @@ public class Parser {
 			}
 
 			body.sourceText = "to " + basetext.substring(0, endindex - baseindex) + "end";
+			if (args.size() < 1) { return r.lput(local).lput(word).lput(body); }
 			return r.lput(local).lput(word).lput(bind).lput(args).lput(body);
 		}
 		return r.lput(parseToken(c));
