@@ -111,6 +111,12 @@ public class Interpreter {
 			}
 		}
 
+		// check for an environment which has been halted via 'reset()':
+		if (s.code == null) {
+			if (e.tracer != null) { e.tracer.end(); }
+			return false;
+		}
+
 		// check for an exhausted list
 		if (s.index >= s.code.size()) {
 			if (s.trace.size() > 0) {
