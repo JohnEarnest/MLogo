@@ -13,6 +13,7 @@ import java.util.*;
 public class Environment {
 
 	Tracer tracer = null;
+	long startMemory = -1;
 	boolean paused = false;
 	Stack<Scope> scopes = new Stack<Scope>();
 	{ scopes.push(new Scope(null, false)); }

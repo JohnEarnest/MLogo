@@ -44,7 +44,8 @@ public class RuntimeError extends LogoError {
 		NotEnoughArguments("Not enough arguments for '%s'!"),
 		OutsideProcedure  ("I can't %s; I'm not running a procedure!"),
 		DivideByZero      ("I cannot divide by zero."),
-		TypeMismatch      ("'%s' is not a %s!");
+		TypeMismatch      ("'%s' is not a %s!"),
+		OutOfMemory       ("Ran out of memory.");
 
 		public final String format;
 		private Type(String format) { this.format = format; }

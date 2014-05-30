@@ -20,6 +20,13 @@ public class Interpreter {
 	**/
 	public static int RECURSION_LIMIT = 1000;
 
+	/**
+	* The amount of memory which the interpreter is allowed
+	* to consume before signaling an out of memory error.
+	* If this is set to -1, no limit will be enforced.
+	**/
+	public static int MEMORY_LIMIT = 1024*1024*16;
+
 	private Interpreter() {}
 
 	/**
@@ -44,6 +51,7 @@ public class Interpreter {
 	* @param e an environment within which to execute the program.
 	**/
 	public static void init(LList code, Environment e) {
+		e.startMemory = Runtime.getRuntime().freeMemory();
 		e.scopes.peek().code = code;
 		e.scopes.peek().index = 0;
 		e.scopes.peek().trace.clear();
@@ -83,6 +91,17 @@ public class Interpreter {
 	}
 
 	private static boolean tick(Environment e) {
+		if (MEMORY_LIMIT > -1) {
+			// protect against runaway memory allocation.
+			// this is somewhat expensive to check every tick,
+			// but catching OutOfMemoryErrors is very flaky
+			// and unreliable.
+			long memory = Runtime.getRuntime().freeMemory();
+			if (e.startMemory - memory > MEMORY_LIMIT) {
+				throw new RuntimeError(e, RuntimeError.Type.OutOfMemory);
+			}
+		}
+
 		if (e.tracer != null) { e.tracer.tick(); }
 
 		Scope s = e.scopes.peek();
