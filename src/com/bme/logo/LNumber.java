@@ -38,4 +38,6 @@ public class LNumber implements LAtom {
 	public String toString() {
 		return ""+value;
 	}
+
+	public int load() { return 1; }
 }

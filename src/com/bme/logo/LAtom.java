@@ -20,4 +20,12 @@ public interface LAtom {
 	* @param e the Environment used as a context for this object.
 	**/
 	public void eval(Environment e);
+
+	/**
+	* Determine the loading factor of this LAtom.
+	* Used for evaluating memory quotas.
+	* Since LAtoms should be immutable data structures
+	* the results of this calculation can be cached.
+	**/
+	public int load();
 }

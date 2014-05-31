@@ -195,4 +195,15 @@ public class LList implements LAtom {
 		ret.values.addAll(after.values);
 		return ret;
 	}
+
+	private int loadFactor = -1;
+	public int load() {
+		if (loadFactor < 0) {
+			loadFactor = 1;
+			for(LAtom a : values) {
+				loadFactor += a.load();
+			}
+		}
+		return loadFactor;
+	}
 }

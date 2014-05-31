@@ -13,7 +13,6 @@ import java.util.*;
 public class Environment {
 
 	Tracer tracer = null;
-	long startMemory = -1;
 	boolean paused = false;
 	Stack<Scope> scopes = new Stack<Scope>();
 	{ scopes.push(new Scope(null, false)); }
@@ -187,6 +186,14 @@ public class Environment {
 		return ret;
 	}
 
+	int load() {
+		int ret = 0;
+		for(Scope s : scopes) {
+			ret += s.load();
+		}
+		return ret;
+	}
+
 	/**
 	* Collect a callstack trace.
 	**/
@@ -251,6 +258,14 @@ class Scope {
 	Scope(LList code, boolean procedure) {
 		this.code      = code;
 		this.procedure = procedure;
+	}
+
+	int load() {
+		int ret = 0;
+		for(LAtom a : bindings.values()) {
+			ret += a.load();
+		}
+		return ret;
 	}
 }
 

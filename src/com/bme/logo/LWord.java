@@ -78,5 +78,7 @@ public class LWord implements LAtom, Comparable<LWord> {
 
 	public int compareTo(LWord other) {
 		return value.compareTo(other.value);
-	} 
+	}
+
+	public int load() { return 1; }
 }
