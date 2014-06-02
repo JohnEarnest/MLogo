@@ -18,7 +18,7 @@
 			deprecation="on"
 		>
 			<compilerarg value="-Xlint"/>
-			<compilerarg value="-Xbootclasspath:/res/1.5/rt.jar"/>
+			<!--<compilerarg value="-Xbootclasspath:/res/1.5/rt.jar"/>-->
 		</javac>
 		<mkdir dir="dist"/>
 		<jar destfile="dist/Logo.jar" basedir="build" />
@@ -36,7 +36,7 @@
 			deprecation="on"
 		>
 			<compilerarg value="-Xlint"/>
-			<compilerarg value="-Xbootclasspath:/res/1.5/rt.jar"/>
+			<!--<compilerarg value="-Xbootclasspath:/res/1.5/rt.jar"/>-->
 		</javac>
 		<mkdir dir="dist"/>
 		<jar destfile="dist/MLogo.jar" basedir="build">
