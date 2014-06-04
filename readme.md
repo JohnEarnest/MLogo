@@ -46,7 +46,7 @@ All the state of the MLogo interpreter is captured in instances of a class calle
 
 		Environment env = Primitives.kernel();
 		LList program = Parser.parse("repeat 4 [forward 100 right 90]");
-		Interpreter.run(LList code, Environment e);
+		Interpreter.run(program, env);
 
 If your program is malformed, `Parser` may throw a `SyntaxError`. If your program encounters an error at runtime, such as a mismatch in expected argument types, it may throw a `RuntimeError`. Each exception type exposes useful methods for pinpointing the source of the problem.
 
