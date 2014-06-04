@@ -63,4 +63,12 @@ public abstract class Tracer {
 	* @param implicit true if this procedure is implicitly returning, rather than an explicit 'stop'.
 	**/
 	public void stop(String name, boolean implicit) {}
+
+	/**
+	* Called immediately before a top-level procedure declared with a 'to' block is defined.
+	* Note that this event will fire before callPrimitive() evaluates the corresponding 'local'.
+	*
+	* @param name the name of the procedure.
+	**/
+	public void define(String name) {}
 }

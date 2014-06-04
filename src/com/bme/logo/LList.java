@@ -17,6 +17,7 @@ public class LList implements LAtom {
 	public String sourceText = "";
 
 	private final List<LAtom> values = new ArrayList<LAtom>();
+	final Map<LWord, String> toBlocks = new IdentityHashMap<LWord, String>();
 
 	/**
 	* Construct a new, empty LList.

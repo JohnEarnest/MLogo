@@ -195,6 +195,9 @@ public class MLogo {
 				public void stop(String name, boolean implicit) {
 					System.out.format("trace: STOP %s%s%n", name, implicit ? " (implicit)" : "");
 				}
+				public void define(String name) {
+					System.out.format("trace: DEFINE %s%n", name);
+				}
 			});
 		}
 

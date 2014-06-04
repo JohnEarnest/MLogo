@@ -168,6 +168,12 @@ public class Interpreter {
 			return true;
 		}
 
+		if (s.code.toBlocks.containsKey(s.code.item(s.index))) {
+			LAtom atom = s.code.item(s.index);
+			String val = s.code.toBlocks.get(atom);
+			for(Tracer tracer : e.tracers) { tracer.define(val); }
+		}
+
 		s.code.item(s.index).eval(e);
 		s.index++;
 		return true;
