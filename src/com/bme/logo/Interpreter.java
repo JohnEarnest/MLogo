@@ -54,7 +54,7 @@ public class Interpreter {
 		e.scopes.peek().code = code;
 		e.scopes.peek().index = 0;
 		e.scopes.peek().trace.clear();
-		if (e.tracer != null) { e.tracer.begin(); }
+		for(Tracer tracer : e.tracers) { tracer.begin(); }
 	}
 
 	/**
@@ -100,7 +100,7 @@ public class Interpreter {
 			}
 		}
 
-		if (e.tracer != null) { e.tracer.tick(); }
+		for(Tracer tracer : e.tracers) { tracer.tick(); }
 
 		Scope s = e.scopes.peek();
 
@@ -116,13 +116,17 @@ public class Interpreter {
 					e.scopes.peek().bindings.put(Primitives.word(e, f.args.item(z)), f.vals.get(z));
 				}
 
-				if (e.tracer != null) {
+				if (e.tracers.size() > 0) {
 					String name = e.getName(f.code).toString();
 					if (name.startsWith("'")) { name = name.substring(1); }
 					Map<LAtom, LAtom> args = new HashMap<LAtom, LAtom>();
 					for(int z = 0; z < f.args.size(); z++) { args.put(f.args.item(z), f.vals.get(z)); }
-					if (Primitives.prim(f.code)) { e.tracer.callPrimitive(name, args); }
-					else { e.tracer.call(name, args, tailCalled); }
+					if (Primitives.prim(f.code)) {
+						for(Tracer tracer : e.tracers) { tracer.callPrimitive(name, args); }
+					}
+					else {
+						for(Tracer tracer : e.tracers) { tracer.call(name, args, tailCalled); }
+					}
 				}
 				return true;
 			}
@@ -130,7 +134,7 @@ public class Interpreter {
 
 		// check for an environment which has been halted via 'reset()':
 		if (s.code == null) {
-			if (e.tracer != null) { e.tracer.end(); }
+			for(Tracer tracer : e.tracers) { tracer.end(); }
 			return false;
 		}
 
@@ -142,21 +146,21 @@ public class Interpreter {
 				);
 			}
 			if (e.scopes.size() <= 1) {
-				if (e.tracer != null) { e.tracer.end(); }
+				for(Tracer tracer : e.tracers) { tracer.end(); }
 				return false;
 			}
 
-			if (e.tracer != null && !Primitives.prim(e.scopes.peek().code)) {
+			if (e.tracers.size() > 0 && !Primitives.prim(e.scopes.peek().code)) {
 				// implied 'stop' or 'output':
 				String name = e.getName(e.scopes.peek().code).toString();
 				if (name.startsWith("'")) { name = name.substring(1); }
 				Stack<Func> f = e.scopes.get(e.scopes.size()-2).trace;
 				if (f.size() > 0 && f.peek().vals.size() > 0) {
 					LAtom last = f.peek().vals.get(f.peek().vals.size()-1);
-					e.tracer.output(name, last, true);
+					for(Tracer tracer : e.tracers) { tracer.output(name, last, true); }
 				}
 				else {
-					e.tracer.stop(name, true);
+					for(Tracer tracer : e.tracers) { tracer.stop(name, true); }
 				}
 			}
 

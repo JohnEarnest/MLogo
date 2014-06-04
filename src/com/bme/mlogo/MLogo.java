@@ -171,7 +171,7 @@ public class MLogo {
 		final Scanner in = new Scanner(System.in);
 
 		if (trace) {
-			e.setTracer(new Tracer() {
+			e.addTracer(new Tracer() {
 				public void begin()  { System.out.println("tracer: begin."); }
 				public void end()    { System.out.println("tracer: end.");   }
 				//public void tick() { System.out.println("tracer: tick.");  }

@@ -226,10 +226,10 @@ public class Primitives {
 					e.scopes.pop();
 				}
 
-				if (e.tracer != null) {
+				if (e.tracers.size() > 0) {
 					String name = e.getName(e.scopes.peek().code).toString();
 					if (name.startsWith("'")) { name = name.substring(1); }
-					e.tracer.stop(name, false);
+					for(Tracer tracer : e.tracers) { tracer.stop(name, false); }
 				}
 
 				e.scopes.pop();
@@ -246,10 +246,10 @@ public class Primitives {
 					e.scopes.pop();
 				}
 
-				if (e.tracer != null) {
+				if (e.tracers.size() > 0) {
 					String name = e.getName(e.scopes.peek().code).toString();
 					if (name.startsWith("'")) { name = name.substring(1); }
-					e.tracer.output(name, r, false);
+					for(Tracer tracer : e.tracers) { tracer.output(name, r, false); }
 				}
 
 				e.scopes.pop();
