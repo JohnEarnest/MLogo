@@ -1,0 +1,16 @@
+to any :list	output item random size :list :listend
+to idle	output any [		[Go on, go on.]		[What does that suggest 'to you?]
+		[How does that make you feel?]	]
+end
+to response :text :pairs	unless :pairs [output idle]
+	if member first first :pairs :text [		output butfirst first :pairs
+	]	output response :text butfirst :pairs
+end
+to converse	print response readlist [		[because Is that the real reason?]
+		[yes     You seem quite positive ]
+		[not     Why not?                ]	]	converse
+end
+to eliza	print [Hi, I'm Eliza. What seems 'to be the problem?]
+	converseend
+
+eliza

@@ -1,0 +1,12 @@
+to readnum	print [Your Guess?]
+	local 'n first readlist
+	if num? :n [ output :n ]
+	output readnumend
+to guessone :s	local 'g readnum	if (:g = :s) [ stop ]
+	if (:g < :s) [ print [Too Low! ] ]
+	if (:g > :s) [ print [Too High!] ]
+	guessone :send
+to guess	print [Guess the number...]
+	guessone random 100	print [You Win!]end
+
+guess

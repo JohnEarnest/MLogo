@@ -1,0 +1,22 @@
+to any :list	output item random size :list :listend
+to noun	output any [		[an enraged camel]		[an ancient philosopher]
+		[a cocker spaniel]		[the Eiffel Tower]		[a cowardly moose]		[the silent majority]	]
+end
+to verb	output any [		[get inspiration from]
+		[redecorate]		[become an obsession of]
+		[make a salt lick out of]
+		[buy an interest in]	]
+end
+to object	output any [		[mother in law]
+		[psychoanalyst]
+		[rumpus room]
+		[fern]		[garage]		[love letters]
+	]end
+to curse	print fput 'May	      fput noun
+	      fput verb
+	      fput 'your
+	      fput object
+	      fput '!	      []
+end
+
+curse

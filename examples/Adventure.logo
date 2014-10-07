@@ -1,0 +1,21 @@
+to command	local 'x readlist	unless word? first :x [print [?] output command]
+	output first :xend
+to select :verb :ops :default	unless :ops [default :verb stop]	if equal? first :ops :verb [run first butfirst :ops stop]	select :verb butfirst butfirst :ops :defaultend
+to balk :verb	print [I do not understand.]endto choose :ops	select command :ops :balkendto play	room playend
+
+to northroom	print [There's a light here.]	if     :pushed [print [The light is on.]]
+	unless :pushed [print [The light is off.]]
+	choose [		s [make 'room :startroom]
+	]end
+to eastroom	print [There's a button here.]
+	choose [		push [			print [you hear a buzz]
+			make 'pushed 'true		]		w [make 'room :startroom]
+	]end
+to startroom	print [You are in a small room.]
+	print [Exits lead north and east.]
+	choose [		n [make 'room :northroom]		e [make 'room :eastroom]
+	]end
+to adventure	local 'room :startroom	local 'pushed 'false	print [Welcome 'to the Adventure!]
+	playend
+
+adventure
