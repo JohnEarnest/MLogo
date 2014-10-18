@@ -204,13 +204,15 @@ public class Parser {
 				if (!r.peek().equals("end")) { throw new SyntaxError(c, MissingToken, r.peek()); }
 				r.pop(); continue;
 			}
-			if (c.curr() == '(') { r.push(")"); c.skip(); continue; }
-			if (c.curr() == '[') { r.push("]"); c.skip(); continue; }
-			if (c.match("to "))  { r.push("end");         continue; }
-			if (c.tokenChar())   { c.token();             continue; }
-			if (c.signed())      { c.number();            continue; }
+			if (c.curr() == '(')  { r.push(")"); c.skip(); continue; }
+			if (c.curr() == '[')  { r.push("]"); c.skip(); continue; }
+			if (c.curr() == '\'') { c.skip(); c.token();   continue; }
+			if (c.curr() == ':')  { c.skip(); c.token();   continue; }
+			if (c.match("to "))   { r.push("end");         continue; }
+			if (c.tokenChar())    { c.token();             continue; }
+			if (c.signed())       { c.number();            continue; }
 
-			if ("+-*/%><=:'".indexOf(c.curr()) >= 0) { c.skip(); continue; }
+			if ("+-*/%><=".indexOf(c.curr()) >= 0) { c.skip(); continue; }
 			throw new SyntaxError(c, InvalidCharacter, ""+c.curr());
 		}
 		return r;
